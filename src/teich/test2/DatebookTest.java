@@ -64,7 +64,9 @@ public class DatebookTest {
 		Datebook d = new Datebook();
 		Event event = new Event("test", 1200);
 		d.addYearlyEvent(event, 5);
-		List<Event> list = d.getEvents(getDate(2014, calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_YEAR)));
+		List<Event> list = d.getEvents(getDate(2014,
+				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DAY_OF_YEAR)));
 		Assert.assertNotNull(list);
 		Assert.assertSame(event, list.get(0));
 	}
@@ -93,6 +95,8 @@ public class DatebookTest {
 		List<Event> list = d.getEvents(getDate(2014, 11, 23));
 		Assert.assertNotNull(list);
 		Assert.assertSame(event, list.get(0));
+		List<Event> l = d.getEvents(getDate(2014, 11, 30));
+		Assert.assertSame(event, l.get(0));
 	}
 
 	@Test
@@ -122,15 +126,15 @@ public class DatebookTest {
 	public void testGetEventsReturnsSortedList() {
 		Datebook dateBook = new Datebook();
 
-		Event event = new Event("alarm1", 0000);
-		Event e2 = new Event("alarm2", 1200);
-		Event e3 = new Event("alarm3", 1300);
+		Event event = new Event("alarm1", 1200);
+		Event e2 = new Event("alarm2", 1300);
+		Event e3 = new Event("alarm3", 1400);
 
-		dateBook.addWeeklyEvent(event, 2);
-		dateBook.addWeeklyEvent(e2, 2);
-		dateBook.addWeeklyEvent(e3, 2);
+		dateBook.addWeeklyEvent(event, 3);
+		dateBook.addWeeklyEvent(e2, 3);
+		dateBook.addWeeklyEvent(e3, 3);
 
-		List<Event> events = dateBook.getEvents(getDate(2014, 11, 29));
+		List<Event> events = dateBook.getEvents(getDate(2014, 11, 30));
 
 		Assert.assertNotNull(events);
 		Assert.assertSame(event, events.get(0));

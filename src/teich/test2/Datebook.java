@@ -63,10 +63,12 @@ public class Datebook {
 		int year = 2014;
 		for (int i = year; i < 9999; i++) {
 
-			if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+			if ((month == 1 || month == 3 || month == 5 || month == 7
+					|| month == 8 || month == 10 || month == 12)
 					&& day <= 30) {
 				day++;
-			} else if ((month == 4 || month == 6 || month == 9 || month == 11) && day <= 29) {
+			} else if ((month == 4 || month == 6 || month == 9 || month == 11)
+					&& day <= 29) {
 				day++;
 			} else if (month == 2 && day <= 27) {
 				day++;
@@ -96,21 +98,23 @@ public class Datebook {
 	 * 
 	 */
 	public void addWeeklyEvent(Event event, int dayOfWeek) {
+		String hour = String.valueOf(event.getTimeOfDay());
+		int hr = Integer.parseInt(hour.substring(0, 2));
+		int min = Integer.parseInt(hour.substring(2));
 		Calendar cal = Calendar.getInstance();
-		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
-		cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-		int dayOfMnth = Math.abs((cal.get(Calendar.DAY_OF_WEEK) - dayOfWeek) - 1);
-		int date = 1 + dayOfMnth;
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-		for (int i = 0; i < 5; i++) {
-			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), date, 0, 0, 0);
+		int d1 = cal.get(Calendar.DAY_OF_WEEK);
+		int dayOfMnth = (7 - d1) + (dayOfWeek);
+		int date = dayOfMnth + cal.get(Calendar.DAY_OF_MONTH);
+		while (date <= 31) {
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), date, hr,
+					min, 0);
+
+			Date day = cal.getTime();
+
+			dateBook.put(day, event);
+			dates.add(day);
+
 			date += 7;
-			Date day = calendar.getTime();
-			if (!(i == 4 && date < 30)) {
-				dateBook.put(day, event);
-				dates.add(day);
-			}
 		}
 	}
 
@@ -143,7 +147,8 @@ public class Datebook {
 		Calendar cal = Calendar.getInstance();
 
 		for (int y = 2014; y < 9999; y++) {
-			cal.set(y, cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			cal.set(y, cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH),
+					0, 0, 0);
 			cal.set(Calendar.DAY_OF_YEAR, dayOfYear);
 			Date date = cal.getTime();
 			dateBook.put(date, event);
@@ -160,9 +165,9 @@ public class Datebook {
 	public List<Event> getEvents(Date date) {
 		List<Event> list = new ArrayList<Event>();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM.dd.yyyy");
+		String day = formatter.format(date);
 		for (Date d : dates) {
 
-			String day = formatter.format(date);
 			String day2 = formatter.format(d);
 
 			if (day.equals(day2)) {
